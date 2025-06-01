@@ -27,13 +27,15 @@ export const liker = async (req, res) => {
         const alreadyLiked = await Like.findOne({ post_id: id, userName_like: userName });
         if (alreadyLiked) return sendError(res, "Vous avez déjà liké ce post", 409);
         
-        const post_info = await axios.get(`${process.env.POSTS_URL}/posts/${id}`);
-
-        await axios.put(`${process.env.POSTS_URL}/posts/${id}/plusLike`);
         const exists = await axios.get(`${process.env.USERS_URL}/users/${userName}/exists`);
         if (!exists.data.exists) {
             return res.status(404).json({ message: "Utilisateur introuvable dans users." });
         }
+        
+        const post_info = await axios.get(`${process.env.POSTS_URL}/posts/${id}`);
+
+        await axios.put(`${process.env.POSTS_URL}/posts/${id}/plusLike`);
+        
     
 
         const newLike = new Like({
