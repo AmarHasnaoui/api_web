@@ -3,8 +3,8 @@ import { getLikes, liker, deleteLike } from '../controller/likeController.js';
 
 export const userRouter = express.Router();
 
-export const userPrefix = '/users';
+export const userPrefix = '/likes';
 
-userRouter.get('/likes', getLikes);
-userRouter.get('/likes/add/:id', liker);
-userRouter.post('/likes/delete/:id', deleteLike);
+userRouter.get('/', getLikes);
+userRouter.post('/add/:id', liker);
+userRouter.delete('/delete/:id', deleteLike);

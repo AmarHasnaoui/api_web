@@ -3,9 +3,9 @@ import { getPosts, createPost, updatePost, deletePost } from '../controller/post
 
 export const userRouter = express.Router();
 
-export const userPrefix = '/users';
+export const userPrefix = '/posts';
 
-userRouter.get('/posts', getPosts);
-userRouter.get('/posts/create', createPost);
-userRouter.post('/posts/update/:id', updatePost);
-userRouter.put('/posts/delete/:id', deletePost);
+userRouter.get('/', getPosts);
+userRouter.post('/create', createPost);
+userRouter.put('/update/:id', updatePost);
+userRouter.delete('/delete/:id', deletePost);

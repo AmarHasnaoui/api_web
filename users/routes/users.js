@@ -5,8 +5,8 @@ export const userRouter = express.Router();
 
 export const userPrefix = '/users';
 
-userRouter.get('/users', getUsers);
-userRouter.get('/users/create', createUsers);
+userRouter.get('/', getUsers);
+userRouter.post('/create', createUsers);
 userRouter.post('/forgot', mdpOublie);
 userRouter.put('/reset', resetMdp);
-userRouter.delete('/login', login);
+userRouter.post('/login', login);
