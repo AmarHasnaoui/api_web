@@ -6,7 +6,7 @@ Ce projet est une API web développée en Node.js avec Express et Mongoose. Elle
 - `posts`
 - `likes`
 
-Chaque module possède sa propre structure (routes, modèles, contrôleurs, etc.), et un point d’entrée (`index_*.js`) permet de les lancer indépendamment.
+Chaque module possède sa propre structure (routes, models, controller, etc.), et un point d’entrée (`index_*.js`) permet de les lancer indépendamment.
 
 ---
 
