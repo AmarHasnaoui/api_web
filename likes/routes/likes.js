@@ -1,10 +1,11 @@
 import express from 'express';
-import { getLikes, liker, deleteLike } from '../controller/likeController.js';
+import { getLikes, liker, deleteLike, deleteLikeByPostId } from '../controller/likeController.js';
 
-export const userRouter = express.Router();
+export const likeRouter  = express.Router();
 
-export const userPrefix = '/likes';
+export const likePrefix  = '/likes';
 
-userRouter.get('/', getLikes);
-userRouter.post('/add/:id', liker);
-userRouter.delete('/delete/:id', deleteLike);
+likeRouter.get('/', getLikes);
+likeRouter.post('/add/:id', liker);
+likeRouter.delete('/delete/:id', deleteLike);
+likeRouter.delete('/post_id/:id', deleteLikeByPostId);

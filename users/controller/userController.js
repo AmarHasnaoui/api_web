@@ -3,6 +3,7 @@ import { sendError } from '../lib/sendError.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
+
 // Get users
 export const getUsers = async (req, res) => {
   try {
@@ -44,6 +45,7 @@ export const createUsers = async (req, res) => {
     });
 
   } catch (err) {
+    console.error("Erreur createUsers:", err);
     sendError(res, "Erreur lors de la création de l'utilisateur", 500);
   }
 };
@@ -96,6 +98,7 @@ export const resetMdp = async (req, res) => {
 
     res.status(200).json({ message: "Mot de passe mis à jour avec succès" });
   } catch (err) {
+    console.error("Erreur resetMdp:", err);
     sendError(res, "Erreur lors de la réinitialisation", 500);
   }
 };
@@ -117,6 +120,19 @@ export const login = async (req, res) => {
 
     res.status(200).json({ message: "Connexion réussie", user });
   } catch (err) {
+    console.error("Erreur login:", err);
     sendError(res, "Erreur lors de la connexion", 500);
   }
+};
+
+// user existe
+export const UserExists = async (req, res) => {
+    const { userName } = req.params;
+
+    const user = await User.findOne({ userName });
+    if (user) {
+        return res.json({ exists: true });
+    } else {
+        return res.json({ exists: false });
+    }
 };

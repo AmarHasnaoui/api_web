@@ -1,11 +1,14 @@
 import express from 'express';
-import { getPosts, createPost, updatePost, deletePost } from '../controller/postController.js';
+import { getPosts, createPost, updatePost, deletePost, add_like, delete_like, get_post } from '../controller/postController.js';
 
-export const userRouter = express.Router();
+export const postRouter = express.Router();
 
-export const userPrefix = '/posts';
+export const postPrefix = '/posts';
 
-userRouter.get('/', getPosts);
-userRouter.post('/create', createPost);
-userRouter.put('/update/:id', updatePost);
-userRouter.delete('/delete/:id', deletePost);
+postRouter.get('/', getPosts);
+postRouter.post('/create', createPost);
+postRouter.put('/update/:id', updatePost);
+postRouter.delete('/delete/:id', deletePost);
+postRouter.put('/:id/plusLike', add_like);
+postRouter.put('/:id/moinsLike', delete_like);
+postRouter.get('/:id', get_post);

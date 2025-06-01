@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-  "users": "node index_users.js",
-  "posts": "node index_posts.js",
-  "likes": "node index_likes.js",
-  "start-all": "concurrently \"npm run users\" \"npm run posts\" \"npm run likes\""
-},
+    "users": "node ./users/index_users.js",
+    "posts": "node ./posts/index_posts.js",
+    "likes": "node ./likes/index_likes.js",
+    "start-all": "concurrently \"npm run users\" \"npm run posts\" \"npm run likes\""
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,5 +16,8 @@
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "mongoose": "^8.15.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

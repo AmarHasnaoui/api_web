@@ -1,8 +1,8 @@
 import { Post } from '../models/posts.js';
-import { User } from '../../users/models/users.js';
-import { Like } from '../../likes/models/likes.js';
 import { sendError } from '../lib/sendError.js';
-
+import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Get posts
 export const getPosts = async (req, res) => {
@@ -23,10 +23,10 @@ export const createPost = async (req, res) => {
       return sendError(res, "userName et post requis", 400);
     }
 
-    const userExist = await User.findOne({ userName });
-    if (!userExist) {
-      return sendError(res, "Utilisateur introuvable", 404);
-    }
+    const exists = await axios.get(`${process.env.USERS_URL}/users/${userName}/exists`);
+    if (!exists.data.exists) {
+            return res.status(404).json({ message: "Utilisateur introuvable dans users." });
+        }
 
     const newPost = new Post({
       userName,
@@ -44,6 +44,7 @@ export const createPost = async (req, res) => {
     });
 
   } catch (err) {
+    console.error("Erreur createPost:", err);
     sendError(res, "Erreur lors de la création du post", 500);
   }
 };
@@ -85,10 +86,63 @@ export const deletePost = async (req, res) => {
 
     await postToDelete.deleteOne();
 
-    await Like.deleteMany({ post_id: id });
+    await axios.delete(`${process.env.LIKES_URL}/likes/post_id/${id}`);
 
     res.status(200).json({ message: "Post supprimé avec succès" });
   } catch (err) {
+    console.error("Erreur deletePost:", err);
     sendError(res, "Erreur lors de la suppression du post", 500);
+  }
+};
+
+// plus like
+export const add_like = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+    if (!post) return sendError(res, "Post non trouvé", 404);
+
+    post.likes = post.likes + 1
+    await post.save();
+
+    res.status(200).json({ message: "Like du Post incrémenté  avec succès" });
+  } catch (err) {
+    console.error("Erreur add_like:", err);
+    sendError(res, "Erreur lors de l'ajout du like", 500);
+  }
+};
+
+// moins like
+export const delete_like = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+    if (!post) return sendError(res, "Post non trouvé", 404);
+
+    post.likes = post.likes - 1
+    await post.save();
+
+    res.status(200).json({ message: "Like du Post décrémenté  avec succès" });
+  } catch (err) {
+    console.error("Erreur delete_like:", err);
+    sendError(res, "Erreur lors de la suppression du like", 500);
+  }
+};
+
+// get info post
+export const get_post = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+    if (!post) return sendError(res, "Post non trouvé", 404);
+
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.error("Erreur get_post:", err);
+    sendError(res, "Erreur lors de la recuperation du post", 500);
   }
 };

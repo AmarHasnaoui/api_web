@@ -1,7 +1,8 @@
 import { Like } from '../models/likes.js';
-import { Post } from '../../posts/models/posts.js';
-import { User } from '../../users/models/users.js';
 import { sendError } from '../lib/sendError.js';
+import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 // Get likes
@@ -25,23 +26,22 @@ export const liker = async (req, res) => {
         }
         const alreadyLiked = await Like.findOne({ post_id: id, userName_like: userName });
         if (alreadyLiked) return sendError(res, "Vous avez déjà liké ce post", 409);
+        
+        const post_info = await axios.get(`${process.env.POSTS_URL}/posts/${id}`);
 
-        const _Post = await Post.findById(id);
-        if (!_Post) return sendError(res, "Post non trouvé", 404);
-
-        const userExist = await User.findOne({ userName });
-        if (!userExist) {
-        return sendError(res, "Utilisateur introuvable", 404);
-    }
+        await axios.put(`${process.env.POSTS_URL}/posts/${id}/plusLike`);
+        const exists = await axios.get(`${process.env.USERS_URL}/users/${userName}/exists`);
+        if (!exists.data.exists) {
+            return res.status(404).json({ message: "Utilisateur introuvable dans users." });
+        }
+    
 
         const newLike = new Like({
-            author: _Post.userName,
+            author: post_info.data.userName,
             userName_like: userName,
             post_id: id
           });
     
-        _Post.likes = _Post.likes + 1;
-        await _Post.save();
         await newLike.save();
     
         res.status(201).json({ message: "Like ajouté avec succès" });
@@ -62,15 +62,27 @@ export const deleteLike = async (req, res) => {
       if (!likeToDelete) return sendError(res, "Like non trouvé", 404);
 
       const id_post = likeToDelete.post_id
-      const _Post = await Post.findById(id_post);
-      _Post.likes = _Post.likes - 1;
+      await axios.put(`${process.env.POSTS_URL}/posts/${id_post}/moinsLike`);
       await likeToDelete.deleteOne();
-      await _Post.save();
   
       res.status(200).json({ message: "Like supprimé avec succès" });
     } catch (err) {
       console.error("Erreur like:", err);
       sendError(res, "Erreur lors de la suppression du like", 500);
+    }
+  };
+
+// supprimer tout les like sur un poste
+export const deleteLikeByPostId = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      await Like.deleteMany({ post_id: id });
+  
+      res.status(200).json({ message: "Likes du post supprimé avec succès" });
+    } catch (err) {
+      console.error("Erreur :", err);
+      sendError(res, "Erreur lors de la suppression des likes", 500);
     }
   };
 
