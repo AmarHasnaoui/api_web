@@ -1,6 +1,7 @@
 import { User } from '../models/users.js';
 import { sendError } from '../lib/sendError.js';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 // Get users
 export const getUsers = async (req, res) => {
@@ -60,13 +61,14 @@ export const mdpOublie = async (req, res) => {
     if (!user) return sendError(res, "Utilisateur non trouvé", 404);
 
     const token = crypto.randomBytes(20).toString('hex');
-
+    
     user.resetToken = token;
     user.resetTokenExpires = Date.now() + 5 * 60 * 1000;
     await user.save();
 
     res.status(200).json({ message: "Lien de réinitialisation généré", token });
   } catch (err) {
+    console.error("Erreur mdpOublie:", err);
     sendError(res, "Erreur lors de la demande de réinitialisation", 500);
   }
 };

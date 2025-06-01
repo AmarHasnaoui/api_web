@@ -1,5 +1,6 @@
 import { Post } from '../models/posts.js';
 import { User } from '../../users/models/users.js';
+import { Like } from '../../likes/models/likes.js';
 import { sendError } from '../lib/sendError.js';
 
 
@@ -58,7 +59,7 @@ export const updatePost = async (req, res) => {
       return sendError(res, "Le nouveau contenu du post est requis", 400);
     }
 
-    const _Post = await Post.findById({id});
+    const _Post = await Post.findById(id);
     if (!_Post) return sendError(res, "Post non trouvé", 404);
 
 
@@ -68,6 +69,7 @@ export const updatePost = async (req, res) => {
 
     res.status(200).json({ message: "Post mis à jour avec succès" });
   } catch (err) {
+    console.error("Erreur updatepost:", err);
     sendError(res, "Erreur lors de la mise à jour du post", 500);
   }
 };
@@ -82,6 +84,8 @@ export const deletePost = async (req, res) => {
     if (!postToDelete) return sendError(res, "Post non trouvé", 404);
 
     await postToDelete.deleteOne();
+
+    await Like.deleteMany({ post_id: id });
 
     res.status(200).json({ message: "Post supprimé avec succès" });
   } catch (err) {

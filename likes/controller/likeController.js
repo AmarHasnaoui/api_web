@@ -1,5 +1,6 @@
 import { Like } from '../models/likes.js';
 import { Post } from '../../posts/models/posts.js';
+import { User } from '../../users/models/users.js';
 import { sendError } from '../lib/sendError.js';
 
 
@@ -46,7 +47,8 @@ export const liker = async (req, res) => {
         res.status(201).json({ message: "Like ajouté avec succès" });
       }
     catch (err) {
-        sendError(res, "Erreur lors de la création du lile", 500);
+        console.error("Erreur like:", err);
+        sendError(res, "Erreur lors de la création du like", 500);
   }
 };
 
@@ -67,6 +69,7 @@ export const deleteLike = async (req, res) => {
   
       res.status(200).json({ message: "Like supprimé avec succès" });
     } catch (err) {
+      console.error("Erreur like:", err);
       sendError(res, "Erreur lors de la suppression du like", 500);
     }
   };
