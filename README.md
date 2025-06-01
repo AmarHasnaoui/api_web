@@ -11,7 +11,7 @@ Chaque module possède sa propre structure (routes, modèles, contrôleurs, etc.
 ---
 
 ## Structure du projet
-
+```bash
 api_web/
 ├── likes/
 │ ├── controller/
@@ -32,6 +32,7 @@ api_web/
 ├── index_posts.js
 ├── package.json
 └── README.md
+```
 
 ## Démarrage
 
