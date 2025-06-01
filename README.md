@@ -14,6 +14,7 @@ Chaque module possède sa propre structure (routes, models, controller, etc.), e
 ```bash
 api_web/
 ├── likes/
+| ├── index_likes.js
 │ ├── controller/
 │ │ └── likeController.js
 │ ├── lib/
@@ -27,10 +28,8 @@ api_web/
 │ └── ... (même structure que likes)
 ├── posts/
 │ └── ... (même structure que likes)
-├── index_likes.js
-├── index_users.js
-├── index_posts.js
-├── package.json
+├── .env
+├── .env_glob
 └── README.md
 ```
 
